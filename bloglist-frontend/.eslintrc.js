@@ -3,9 +3,9 @@ module.exports = {
     "env": {
         "browser": true,
         "es6": true,
-        "jest/globals": true 
+        "jest/globals": true
     },
-    "extends": [ 
+    "extends": [
         "eslint:recommended",
         "plugin:react/recommended"
     ],
@@ -22,11 +22,11 @@ module.exports = {
     "rules": {
         "indent": [
             "error",
-            2  
+            2
         ],
         "linebreak-style": [
             "error",
-            "unix"
+            "windows"
         ],
         "quotes": [
             "error",
@@ -49,8 +49,8 @@ module.exports = {
         "react/react-in-jsx-scope": "off"
     },
     "settings": {
-      "react": {
-        "version": "detect"
-      }
+        "react": {
+            "version": "detect"
+        }
     }
-  }
+}

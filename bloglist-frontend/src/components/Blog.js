@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState } from 'react'
 
 const Blog = ({ blog, user, like, remove }) => {
   const blogStyle = {
@@ -16,7 +16,7 @@ const Blog = ({ blog, user, like, remove }) => {
   }
 
   const handleLikes = () => {
-    const toAdd = {...blog, likes: blog.likes + 1}
+    const toAdd = { ...blog, likes: blog.likes + 1 }
     like(toAdd)
   }
 
@@ -33,7 +33,7 @@ const Blog = ({ blog, user, like, remove }) => {
   }
 
   const removeButton = user.username === blog.user.username && blog.user.name === user.name ? <button onClick={handleDeletion}>delete</button> : null
-  
+
 
   return (
     <div style={blogStyle}>

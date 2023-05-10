@@ -83,16 +83,16 @@ const App = () => {
 
   const deleteBlog = (blogObject) => {
     if (window.confirm(`Remove blog ${blogObject.title} by ${blogObject.author}`))
-    blogService
-      .remove(blogObject)
-      .then(() => {
-        setBlogs(blogs.filter(blog => blog.id !== blogObject.id))
-      
-        setMessage('blog removed!')
-        setTimeout(() => {
-          setMessage(null)
-        }, 5000)
-      })
+      blogService
+        .remove(blogObject)
+        .then(() => {
+          setBlogs(blogs.filter(blog => blog.id !== blogObject.id))
+
+          setMessage('blog removed!')
+          setTimeout(() => {
+            setMessage(null)
+          }, 5000)
+        })
   }
 
   const handleLogout = () => {
@@ -140,13 +140,13 @@ const App = () => {
         />
       </Togglable>
       {blogs
-      .sort(compareNumbers)
-      .map(blog =>
-          <Blog 
+        .sort(compareNumbers)
+        .map(blog =>
+          <Blog
             key={blog.id}
-            blog={blog} 
-            user={user} 
-            like={addLike} 
+            blog={blog}
+            user={user}
+            like={addLike}
             remove={deleteBlog}
           />
         )}
