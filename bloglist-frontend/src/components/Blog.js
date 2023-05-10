@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { act } from 'react-dom/test-utils'
 
 const Blog = ({ blog, user, like, remove }) => {
   const blogStyle = {
@@ -12,7 +13,7 @@ const Blog = ({ blog, user, like, remove }) => {
   const [visibility, setVisibility] = useState(true)
 
   const changeVisibility = () => {
-    setVisibility(!visibility)
+    act(() => setVisibility(!visibility))
   }
 
   const handleLikes = () => {
