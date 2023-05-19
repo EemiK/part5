@@ -4,6 +4,7 @@ const LoginForm = ({ name, password, handlers, submit }) => {
       <div>
         username
         <input
+          id='username'
           type="text"
           value={name}
           name="Username"
@@ -13,6 +14,7 @@ const LoginForm = ({ name, password, handlers, submit }) => {
       <div>
         password
         <input
+          id='password'
           type="password"
           value={password}
           name="Password"
@@ -20,7 +22,7 @@ const LoginForm = ({ name, password, handlers, submit }) => {
         />
       </div>
       <div>
-        <button type="submit">login</button>
+        <button id="login-button" type="submit">login</button>
       </div>
     </form>
   )

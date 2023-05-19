@@ -35,6 +35,19 @@ const App = () => {
     }
   }, [])
 
+  const handleLogout = () => {
+    window.localStorage.clear()
+    setUser(null)
+  }
+
+  const handleUsernameChange = (event) => {
+    setUsername(event.target.value)
+  }
+
+  const handlePasswordChange = (event) => {
+    setPassword(event.target.value)
+  }
+
   const handleLogin = async (event) => {
     event.preventDefault()
 
@@ -76,9 +89,8 @@ const App = () => {
 
   const addLike = (blogObject) => {
     blogService.update(blogObject)
-      .then(returnedBlog => {
-        setBlogs(blogs.map(blog => blog.id === returnedBlog.id ? returnedBlog : blog))
-      })
+
+    setBlogs(blogs.map(blog => blog.id === blogObject.id ? blogObject : blog))
   }
 
   const deleteBlog = (blogObject) => {
@@ -93,19 +105,6 @@ const App = () => {
             setMessage(null)
           }, 5000)
         })
-  }
-
-  const handleLogout = () => {
-    window.localStorage.clear()
-    setUser(null)
-  }
-
-  const handleUsernameChange = (event) => {
-    setUsername(event.target.value)
-  }
-
-  const handlePasswordChange = (event) => {
-    setPassword(event.target.value)
   }
 
   if (user === null) {
@@ -132,7 +131,7 @@ const App = () => {
       <h2>blogs</h2>
       <Notification message={message} />
       <p>
-        {user.username} logged in<LogoutButton submit={handleLogout} />
+        {user.name} logged in<LogoutButton submit={handleLogout} />
       </p>
       <Togglable buttonLabel="create new blog" ref={blogFormRef}>
         <BlogForm

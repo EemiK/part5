@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { act } from 'react-dom/test-utils'
 
 const Blog = ({ blog, user, like, remove }) => {
   const blogStyle = {
@@ -13,7 +12,7 @@ const Blog = ({ blog, user, like, remove }) => {
   const [visibility, setVisibility] = useState(true)
 
   const changeVisibility = () => {
-    act(() => setVisibility(!visibility))
+    setVisibility(!visibility)
   }
 
   const handleLikes = () => {
@@ -37,13 +36,13 @@ const Blog = ({ blog, user, like, remove }) => {
 
 
   return (
-    <div style={blogStyle}>
+    <div style={blogStyle} className='blog'>
       {blog.title} {blog.author} <button onClick={changeVisibility}>hide</button>
       <div>
         <a href={blog.url}>{blog.url}</a>
       </div>
       <div>
-        likes {blog.likes} <button onClick={handleLikes}>like</button>
+        likes {blog.likes} <button onClick={handleLikes} id='like-button'>like</button>
       </div>
       <div>
         {blog.user.name ? blog.user.name : user.name}

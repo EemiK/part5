@@ -36,7 +36,7 @@ describe('<Blog />', () => {
   test('url and likes are shown after click', async () => {
     const user = userEvent.setup()
     const button = screen.getByText('view')
-    await user.click(button)
+    await act(() => user.click(button))
 
     const url = container.querySelector('.url')
     const likes = container.querySelector('.likes')
@@ -48,7 +48,7 @@ describe('<Blog />', () => {
   test('like button is pressed twice', async () => {
     const user = userEvent.setup()
     const view = screen.getByText('view')
-    await user.click(view)
+    await act(() => user.click(view))
 
     const like = screen.getByText('like')
     await act(() => user.click(like))
