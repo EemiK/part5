@@ -21,9 +21,7 @@ const App = () => {
   const [password, setPassword] = useState('')
 
   useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs(blogs)
-    )
+    blogService.getAll().then((blogs) => setBlogs(blogs))
   }, [])
 
   useEffect(() => {
@@ -53,12 +51,11 @@ const App = () => {
 
     try {
       const user = await loginService.login({
-        username, password,
+        username,
+        password,
       })
 
-      window.localStorage.setItem(
-        'loggedBlogappuser', JSON.stringify(user)
-      )
+      window.localStorage.setItem('loggedBlogappuser', JSON.stringify(user))
       blogService.setToken(user.token)
       setUser(user)
       setUsername('')
@@ -75,36 +72,36 @@ const App = () => {
 
   const addBlog = (blogObject) => {
     blogFormRef.current.toggleVisibility()
-    blogService
-      .create(blogObject)
-      .then(returnedBlog => {
-        setBlogs(blogs.concat(returnedBlog))
+    blogService.create(blogObject).then((returnedBlog) => {
+      setBlogs(blogs.concat(returnedBlog))
 
-        setMessage(`a new blog ${blogObject.title} added`)
-        setTimeout(() => {
-          setMessage(null)
-        }, 5000)
-      })
+      setMessage(`a new blog ${blogObject.title} added`)
+      setTimeout(() => {
+        setMessage(null)
+      }, 5000)
+    })
   }
 
   const addLike = (blogObject) => {
     blogService.update(blogObject)
 
-    setBlogs(blogs.map(blog => blog.id === blogObject.id ? blogObject : blog))
+    setBlogs(
+      blogs.map((blog) => (blog.id === blogObject.id ? blogObject : blog))
+    )
   }
 
   const deleteBlog = (blogObject) => {
-    if (window.confirm(`Remove blog ${blogObject.title} by ${blogObject.author}`))
-      blogService
-        .remove(blogObject)
-        .then(() => {
-          setBlogs(blogs.filter(blog => blog.id !== blogObject.id))
+    if (
+      window.confirm(`Remove blog ${blogObject.title} by ${blogObject.author}`)
+    )
+      blogService.remove(blogObject).then(() => {
+        setBlogs(blogs.filter((blog) => blog.id !== blogObject.id))
 
-          setMessage('blog removed!')
-          setTimeout(() => {
-            setMessage(null)
-          }, 5000)
-        })
+        setMessage('blog removed!')
+        setTimeout(() => {
+          setMessage(null)
+        }, 5000)
+      })
   }
 
   if (user === null) {
@@ -131,24 +128,21 @@ const App = () => {
       <h2>blogs</h2>
       <Notification message={message} />
       <p>
-        {user.name} logged in<LogoutButton submit={handleLogout} />
+        {user.name} logged in
+        <LogoutButton submit={handleLogout} />
       </p>
       <Togglable buttonLabel="create new blog" ref={blogFormRef}>
-        <BlogForm
-          createBlog={addBlog}
-        />
+        <BlogForm createBlog={addBlog} />
       </Togglable>
-      {blogs
-        .sort(compareNumbers)
-        .map(blog =>
-          <Blog
-            key={blog.id}
-            blog={blog}
-            user={user}
-            like={addLike}
-            remove={deleteBlog}
-          />
-        )}
+      {blogs.sort(compareNumbers).map((blog) => (
+        <Blog
+          key={blog.id}
+          blog={blog}
+          user={user}
+          like={addLike}
+          remove={deleteBlog}
+        />
+      ))}
     </div>
   )
 }
