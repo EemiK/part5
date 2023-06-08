@@ -1,8 +1,8 @@
 import axios from 'axios'
 import { useQuery } from 'react-query'
-import { Link } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 
-const Users = () => {
+const User = () => {
   const getAll = () => {
     const request = axios.get('/api/users/')
     return request.then((res) => res.data)
@@ -19,16 +19,21 @@ const Users = () => {
 
   const users = result.data
 
+  const userToDisplay = users.find((n) => n.id === useParams().id)
+
+  console.log(users)
+
   return (
     <div>
-      <h2>Users</h2>
-      {users.map((user) => (
-        <div key={user.id}>
-          <Link to={`/users/${user.id}`}>{user.name}</Link> {user.blogs.length}
-        </div>
-      ))}
+      <h2>{userToDisplay.name}</h2>
+      <h3>added blogs</h3>
+      <ul>
+        {userToDisplay.blogs.map((blog) => (
+          <li key={blog.id}>{blog.title}</li>
+        ))}
+      </ul>
     </div>
   )
 }
 
-export default Users
+export default User

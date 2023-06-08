@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom'
-import LogoutButton from './LogoutButton'
 
-const Menu = ({ user, submit }) => {
+const Menu = () => {
   const padding = {
     paddingRight: 5,
   }
@@ -13,7 +12,6 @@ const Menu = ({ user, submit }) => {
       <Link style={padding} to="/users">
         users
       </Link>
-      <div>{user.name} logged in <LogoutButton submit={submit}>log out</LogoutButton></div>
       <h2>blog app</h2>
     </div>
   )

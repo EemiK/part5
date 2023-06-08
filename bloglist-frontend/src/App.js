@@ -1,20 +1,24 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import {
   BrowserRouter as Router,
+  Routes,
+  Route,
 } from 'react-router-dom'
 
-import Blog from './components/Blog'
-import BlogForm from './components/BlogForm'
 import LoginForm from './components/LoginForm'
 import LogoutButton from './components/LogoutButton'
 import Error from './components/Error'
 import Notification from './components/Notification'
+import Users from './components/Users'
+import User from './components/User'
 
 import blogService from './services/blogs'
 import loginService from './services/login'
-import Togglable from './components/Togglable'
 import { useNotificationDispatch } from './NotificationContext'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
+import Menu from './components/Menu'
+import BlogList from './components/BlogList'
+import BlogView from './components/BlogView'
 
 const App = () => {
   const [user, setUser] = useState(null)
@@ -59,7 +63,7 @@ const App = () => {
     },
   })
 
-  const deletedBlogMutation = useMutation(blogService.remove, {
+  /*const deletedBlogMutation = useMutation(blogService.remove, {
     onSuccess: (deletedBlog) => {
       const blogs = queryClient.getQueryData('blogs')
       queryClient.setQueryData(
@@ -72,7 +76,7 @@ const App = () => {
         dispatch({ type: 'HIDE' })
       }, 5000)
     },
-  })
+  })*/
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappuser')
@@ -118,10 +122,7 @@ const App = () => {
     }
   }
 
-  const blogFormRef = useRef()
-
   const addBlog = (blogObject) => {
-    blogFormRef.current.toggleVisibility()
     newBlogMutation.mutate(blogObject)
   }
 
@@ -129,12 +130,12 @@ const App = () => {
     updatedBlogMutation.mutate(blogObject)
   }
 
-  const deleteBlog = (blogObject) => {
+  /*const deleteBlog = (blogObject) => {
     if (
       window.confirm(`Remove blog ${blogObject.title} by ${blogObject.author}`)
     )
       deletedBlogMutation.mutate(blogObject)
-  }
+  }*/
 
   if (user === null) {
     return (
@@ -151,10 +152,6 @@ const App = () => {
     )
   }
 
-  const compareNumbers = (a, b) => {
-    return b.likes - a.likes
-  }
-
   if (result.isLoading) {
     return <div>Loading...</div>
   }
@@ -163,25 +160,19 @@ const App = () => {
 
   return (
     <Router>
-      <h2>blogs</h2>
+      <Menu />
       <Notification />
       <p>
         {user.name} logged in
         <LogoutButton submit={handleLogout} />
       </p>
-      <Togglable buttonLabel="create new blog" ref={blogFormRef}>
-        <BlogForm createBlog={addBlog} />
-      </Togglable>
-      {blogs.sort(compareNumbers).map((blog) => (
-        <Blog
-          key={blog.id}
-          blog={blog}
-          id={blog.id}
-          user={user}
-          like={addLike}
-          remove={deleteBlog}
-        />
-      ))}
+      <Routes>
+        <Route path='/users/:id' element={<User />} />
+        <Route path='/blogs/:id' element={<BlogView blogs={blogs} like={addLike} />} />
+        <Route path='/' element={<BlogList blogs={blogs} addBlog={addBlog} />} />
+        <Route path='/users' element={<Users />} />
+      </Routes>
+
     </Router>
   )
 }

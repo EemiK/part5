@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import Togglable from './Togglable'
 import BlogForm from './BlogForm'
 
-const BlogList = ({ blogs, addBlog, refe }) => {
+const BlogList = ({ blogs, addBlog, blogRef }) => {
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -17,8 +17,8 @@ const BlogList = ({ blogs, addBlog, refe }) => {
 
   return (
     <div>
-      <Togglable buttonLabel="create new blog" ref={refe}>
-        <BlogForm createBlog={addBlog} />
+      <Togglable buttonLabel="create new blog">
+        <BlogForm createBlog={addBlog} blogRef={blogRef} />
       </Togglable>
       {blogs.sort(compareNumbers).map((blog) => (
         <div key={blog.id} style={blogStyle}>
