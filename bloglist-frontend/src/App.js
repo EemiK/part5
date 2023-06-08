@@ -5,7 +5,7 @@ import {
   Route,
   Link,
   useParams,
-  useNavigate,
+  useNavigate
 } from 'react-router-dom'
 
 import Blog from './components/Blog'
@@ -14,7 +14,6 @@ import LoginForm from './components/LoginForm'
 import LogoutButton from './components/LogoutButton'
 import Error from './components/Error'
 import Notification from './components/Notification'
-import Menu from './components/Menu'
 
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -169,9 +168,13 @@ const App = () => {
 
   return (
     <Router>
-      <Menu user={user} submit={handleLogout} />
+      <Menu />
+      <h2>blogs</h2>
       <Notification />
-
+      <p>
+        {user.name} logged in
+        <LogoutButton submit={handleLogout} />
+      </p>
       <Togglable buttonLabel="create new blog" ref={blogFormRef}>
         <BlogForm createBlog={addBlog} />
       </Togglable>
