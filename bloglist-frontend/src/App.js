@@ -9,20 +9,66 @@ import Notification from './components/Notification'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import Togglable from './components/Togglable'
+import { useNotificationDispatch } from './NotificationContext'
+import { useMutation, useQuery, useQueryClient } from 'react-query'
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
 
   const [errorMessage, setErrorMessage] = useState(null)
-  const [message, setMessage] = useState(null)
+  const dispatch = useNotificationDispatch()
 
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
 
-  useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs))
-  }, [])
+  const queryClient = new useQueryClient()
+
+  const result = useQuery('blogs', blogService.getAll, {
+    refetchOnWindowFocus: false,
+    retry: 1,
+  })
+
+  const updatedBlogMutation = useMutation(blogService.update, {
+    onSuccess: (updatedBlog) => {
+      const blogs = queryClient.getQueryData('blogs')
+      queryClient.setQueryData(
+        'blogs',
+        blogs.map((n) => (n.id !== updatedBlog.id ? n : updatedBlog))
+      )
+
+      dispatch({ type: 'SHOW', payload: `blog ${updatedBlog.title} liked` })
+      setTimeout(() => {
+        dispatch({ type: 'HIDE' })
+      }, 5000)
+    },
+  })
+
+  const newBlogMutation = useMutation(blogService.create, {
+    onSuccess: (newBlog) => {
+      const blogs = queryClient.getQueryData('blogs')
+      queryClient.setQueryData('blogs', blogs.concat(newBlog))
+
+      dispatch({ type: 'SHOW', payload: `a new blog ${newBlog.title} added` })
+      setTimeout(() => {
+        dispatch({ type: 'HIDE' })
+      }, 5000)
+    },
+  })
+
+  const deletedBlogMutation = useMutation(blogService.remove, {
+    onSuccess: (deletedBlog) => {
+      const blogs = queryClient.getQueryData('blogs')
+      queryClient.setQueryData(
+        'blogs',
+        blogs.filter((blog) => blog.id !== deletedBlog.id)
+      )
+
+      dispatch({ type: 'SHOW', payload: 'blog removed!' })
+      setTimeout(() => {
+        dispatch({ type: 'HIDE' })
+      }, 5000)
+    },
+  })
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappuser')
@@ -72,36 +118,18 @@ const App = () => {
 
   const addBlog = (blogObject) => {
     blogFormRef.current.toggleVisibility()
-    blogService.create(blogObject).then((returnedBlog) => {
-      setBlogs(blogs.concat(returnedBlog))
-
-      setMessage(`a new blog ${blogObject.title} added`)
-      setTimeout(() => {
-        setMessage(null)
-      }, 5000)
-    })
+    newBlogMutation.mutate(blogObject)
   }
 
   const addLike = (blogObject) => {
-    blogService.update(blogObject)
-
-    setBlogs(
-      blogs.map((blog) => (blog.id === blogObject.id ? blogObject : blog))
-    )
+    updatedBlogMutation.mutate(blogObject)
   }
 
   const deleteBlog = (blogObject) => {
     if (
       window.confirm(`Remove blog ${blogObject.title} by ${blogObject.author}`)
     )
-      blogService.remove(blogObject).then(() => {
-        setBlogs(blogs.filter((blog) => blog.id !== blogObject.id))
-
-        setMessage('blog removed!')
-        setTimeout(() => {
-          setMessage(null)
-        }, 5000)
-      })
+      deletedBlogMutation.mutate(blogObject)
   }
 
   if (user === null) {
@@ -123,10 +151,16 @@ const App = () => {
     return b.likes - a.likes
   }
 
+  if (result.isLoading) {
+    return <div>Loading...</div>
+  }
+
+  const blogs = result.data
+
   return (
     <div>
       <h2>blogs</h2>
-      <Notification message={message} />
+      <Notification />
       <p>
         {user.name} logged in
         <LogoutButton submit={handleLogout} />
@@ -138,6 +172,7 @@ const App = () => {
         <Blog
           key={blog.id}
           blog={blog}
+          id={blog.id}
           user={user}
           like={addLike}
           remove={deleteBlog}

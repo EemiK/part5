@@ -16,8 +16,7 @@ const Blog = ({ blog, user, like, remove }) => {
   }
 
   const handleLikes = () => {
-    const toAdd = { ...blog, likes: blog.likes + 1 }
-    like(toAdd)
+    like({ ...blog, likes: blog.likes + 1 })
   }
 
   const handleDeletion = () => {
