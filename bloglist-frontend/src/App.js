@@ -1,10 +1,20 @@
 import { useState, useEffect, useRef } from 'react'
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Link,
+  useParams,
+  useNavigate,
+} from 'react-router-dom'
+
 import Blog from './components/Blog'
 import BlogForm from './components/BlogForm'
 import LoginForm from './components/LoginForm'
 import LogoutButton from './components/LogoutButton'
 import Error from './components/Error'
 import Notification from './components/Notification'
+import Menu from './components/Menu'
 
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -158,13 +168,10 @@ const App = () => {
   const blogs = result.data
 
   return (
-    <div>
-      <h2>blogs</h2>
+    <Router>
+      <Menu user={user} submit={handleLogout} />
       <Notification />
-      <p>
-        {user.name} logged in
-        <LogoutButton submit={handleLogout} />
-      </p>
+
       <Togglable buttonLabel="create new blog" ref={blogFormRef}>
         <BlogForm createBlog={addBlog} />
       </Togglable>
@@ -178,7 +185,7 @@ const App = () => {
           remove={deleteBlog}
         />
       ))}
-    </div>
+    </Router>
   )
 }
 
