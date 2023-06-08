@@ -1,11 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import {
   BrowserRouter as Router,
-  Routes,
-  Route,
-  Link,
-  useParams,
-  useNavigate
 } from 'react-router-dom'
 
 import Blog from './components/Blog'
@@ -168,7 +163,6 @@ const App = () => {
 
   return (
     <Router>
-      <Menu />
       <h2>blogs</h2>
       <Notification />
       <p>
